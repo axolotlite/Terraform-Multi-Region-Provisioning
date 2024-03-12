@@ -1,10 +1,41 @@
-module "dynamodb_table" {
-  source = "terraform-aws-modules/dynamodb-table/aws"
-  providers = {
-    aws = aws.east
-  }
+#for testing
+#module "dynamodb_table" {
+#  source   = "terraform-aws-modules/dynamodb-table/aws"
+#
+#  name     = "my-table"
+#  hash_key = "id"
+#
+#  attributes = [
+#    {
+#      name = "id"
+#      type = "N"
+#    }
+#  ]
+#
+#  tags = {
+#    Terraform   = "true"
+#    Environment = "staging"
+#  }
+#}
+#resource "aws_instance" "example_server" {
+#
+#  ami = data.aws_ami.amazon_linux.id
+#  instance_type = "t2.micro"
+#  key_name ="vockey"
+#  subnet_id = module.vpc.public_subnets[0]
+#  vpc_security_group_ids = [aws_security_group.ssh_sg.id]
+#  associate_public_ip_address = "true"
+#  tags = {
+#
+#    Name = "test_dynamo_connectivity"
+#
+#  }
+#
+#}
 
-  name                                  = "my-table-custom"
+module "dynamodb_table" {
+  source                                = "terraform-aws-modules/dynamodb-table/aws"
+  name                                  = "${var.basename}-table-${var.tags["Env"]}"
   hash_key                              = "id"
   range_key                             = "title"
   billing_mode                          = "PROVISIONED"
@@ -63,8 +94,5 @@ module "dynamodb_table" {
     }
   ]
 
-  tags = {
-    Terraform   = "true"
-    Environment = "dev"
-  }
+  tags = var.tags
 }
